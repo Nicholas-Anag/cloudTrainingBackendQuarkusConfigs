@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+spec:
+  selector:
+    #The name of the deployed pod, searching at the targeted port
+    app.kubernetes.io/name: backend-deployment
+  port:
+    - protocol: TCP
+      #The port to forward(How THIS service will be targeted)
+      port: 90
+      #The port to target the backend Deployment
+      targetPort: 80

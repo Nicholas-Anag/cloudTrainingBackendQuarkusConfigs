@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+  labels:
+    app: backend-quarkus
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend-quarkus
+    template:
+      metadata:
+        labels:
+          app: backend-quarkus
+      spec:
+        containers:
+          - name: backend-quarkus
+            image: quarkus-backend-training-image:0.0.1
+            ports:
+            - containerPort: 80
