@@ -27,7 +27,7 @@ spec:
     #syncOptions : CreateNamespace is checking th namespace given in spec->destination->namespace
     #automated: Pulls changes from our git repo every 3 minutes. For faster methods we can add Webhook to replace Pull logic of Argo with Push of GitHub.
     syncOptions:
-      - CreateNamespace = true
+    - CreateNamespace=true
 
     automated:
       #selfHeal is by default false but we change it to true because we do NOT want kubectl apply working,

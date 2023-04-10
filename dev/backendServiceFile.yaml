@@ -5,10 +5,10 @@ metadata:
 spec:
   selector:
     #The name of the deployed pod, searching at the targeted port
-    app.kubernetes.io/name: backend-deployment
-  port:
+    app: backend-quarkus
+  ports:
     - protocol: TCP
       #The port to forward(How THIS service will be targeted)
       port: 90
       #The port to target the backend Deployment
-      targetPort: 80
+      targetPort: 8081
