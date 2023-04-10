@@ -1,0 +1,40 @@
+#the api version is defined by the tool we use(in our case ArgoCD.
+#We need to check it at documentation page in order to be synched with the latest version.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  #here we give the name of our App as also the namespace in which it should be created.
+  name: cloud-training-argo-application
+  namespace: argocd
+spec:
+  project: default
+
+  source:
+    #The repo within gitHub which keeps all the config files of our project
+    #Target revision is to let argo know that has to follow always the HEAD point of git.
+    repoURL: https://github.com/Nicholas-Anag/cloudTrainingBackendQuarkusConfigs.git
+    targetRevision: HEAD
+    path: dev
+  destination:
+    #The cluster we want to keep configured.
+    #The target provided is the default of the k8s cluster as Argo has direct access because it is deployed within the cluster.
+    server: https://kubernetes.default.svc
+    #namespace is needed in order ArgoCD to deploy our config files within the cluster of k8s with a dedicated namespace of theirs.
+    namespace: cloud-training
+
+  #This is extra configs of ArgoCD
+  syncPolicy:
+    #syncOptions : CreateNamespace is checking th namespace given in spec->destination->namespace
+    #automated: Pulls changes from our git repo every 3 minutes. For faster methods we can add Webhook to replace Pull logic of Argo with Push of GitHub.
+    syncOptions:
+      - CreateNamespace = true
+
+    automated:
+      #selfHeal is by default false but we change it to true because we do NOT want kubectl apply working,
+      #directly to the cluster. So with true ArgoCD is always trying to keep the state of the cluster same as the one described inside the config files of our repo,
+      #This way anyone working on the project just has to do a git commit in the repo rather than touching directly the cluster.
+      selfHeal: true
+
+      #prune: defines to ArgoCD to delete or change accordingly any created components within the Cluster if we have changed them in our repo too.
+      #For example if we delete backendServiceFile.yaml we want ArgoCD to delete too inside the cluster. (By default it is leaving it exist)
+      prune: true
